@@ -1,10 +1,12 @@
 package pl.coderslab.entity;
 
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -18,6 +20,8 @@ public class Book {
   private int rating;
   private String description;
 
+  @ManyToOne
+  private Publisher publisher;
 
   public long getId() {
     return id;
@@ -51,6 +55,14 @@ public class Book {
     this.description = description;
   }
 
+  public Publisher getPublisher() {
+    return publisher;
+  }
+
+  public void setPublisher(Publisher publisher) {
+    this.publisher = publisher;
+  }
+
   @Override
   public String toString() {
     return "Book{" +
@@ -58,6 +70,7 @@ public class Book {
         ", title='" + title + '\'' +
         ", rating=" + rating +
         ", description='" + description + '\'' +
+        ", publisher=" + publisher +
         '}';
   }
 }

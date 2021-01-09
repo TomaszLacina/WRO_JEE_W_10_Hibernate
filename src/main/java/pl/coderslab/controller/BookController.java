@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.dao.BookDao;
+import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Book;
+import pl.coderslab.entity.Publisher;
 
 @Controller
 @RequestMapping("/book")
 public class BookController {
 
   private final BookDao bookDao;
+  private final PublisherDao publisherDao;
 
-  public BookController(BookDao bookDao) {
+  public BookController(BookDao bookDao, PublisherDao publisherDao) {
     this.bookDao = bookDao;
+    this.publisherDao = publisherDao;
   }
 
   @GetMapping("/{id}")
@@ -61,6 +65,39 @@ public class BookController {
     Optional<Book> maybeBook = bookDao.optionalFindById(id);
 
     maybeBook.ifPresent(bookDao::remove);
+  }
+
+
+  @PostMapping("/with-publisher")
+  @ResponseBody
+  public String createWithPublisher(){
+    Book book = new Book();
+    book.setTitle("Ksiazka");
+    book.setDescription("Ksiazka od publishera");
+
+    Publisher publisher = new Publisher();
+    publisher.setName("Super wydawca");
+
+    book.setPublisher(publisher);
+
+    return bookDao.create(book).toString();
+
+  }
+
+
+  @PostMapping("/with-publisher2")
+  @ResponseBody
+  public String createWithPublisher2(){
+    Book book = new Book();
+    book.setTitle("Ksiazka");
+    book.setDescription("Ksiazka od publishera");
+
+
+    book.setPublisher(publisherDao.findById(1));
+
+    Book book1 = bookDao.create(book);
+    return book1.toString();
+
   }
 
 
