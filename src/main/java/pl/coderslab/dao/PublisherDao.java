@@ -1,5 +1,6 @@
 package pl.coderslab.dao;
 
+import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -15,28 +16,32 @@ public class PublisherDao {
   private EntityManager entityManager;
 
 
-  public Publisher findById(long id){
+  public Publisher findById(long id) {
     return entityManager.find(Publisher.class, id);
   }
 
-  public Optional<Publisher> optionalFindById(long id){
+  public Optional<Publisher> optionalFindById(long id) {
     return Optional.ofNullable(entityManager.find(Publisher.class, id));
   }
 
-  public Publisher create(Publisher publisher){
+  public Publisher create(Publisher publisher) {
     entityManager.persist(publisher);
     return publisher;
   }
 
-  public Publisher update(Publisher publisher){
+  public Publisher update(Publisher publisher) {
     entityManager.merge(publisher);
     return publisher;
   }
 
-  public void remove(Publisher publisher){
+  public void remove(Publisher publisher) {
     Publisher publisherForRemoval = entityManager.contains(publisher) ? publisher : entityManager.merge(publisher);
 
     entityManager.remove(publisherForRemoval);
   }
 
+  public List<Publisher> findAll() {
+
+    return entityManager.createQuery("SELECT p FROM Publisher p").getResultList();
+  }
 }
