@@ -1,7 +1,9 @@
 package pl.coderslab.controller;
 
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +19,7 @@ import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
 
 @Controller
-@RequestMapping("/book")
+@RequestMapping("/books")
 public class BookController {
 
   private final BookDao bookDao;
@@ -26,6 +28,26 @@ public class BookController {
   public BookController(BookDao bookDao, PublisherDao publisherDao) {
     this.bookDao = bookDao;
     this.publisherDao = publisherDao;
+  }
+
+  @GetMapping
+  @ResponseBody
+  public String findAll() {
+    List<Book> all = bookDao.findAll();
+
+    return all.stream()
+        .map(Book::toString)
+        .collect(Collectors.joining("\n"));
+  }
+
+  @GetMapping(path = "/rating", produces = "text/plain;charset=UTF-8")
+  @ResponseBody
+  public String findByRating(@RequestParam int rating){
+    List<Book> books = bookDao.findByRatingGreaterThen(rating);
+
+    return books.stream()
+        .map(Book::toString)
+        .collect(Collectors.joining("<br>"));
   }
 
   @GetMapping("/{id}")
@@ -70,7 +92,7 @@ public class BookController {
 
   @PostMapping("/with-publisher")
   @ResponseBody
-  public String createWithPublisher(){
+  public String createWithPublisher() {
     Book book = new Book();
     book.setTitle("Ksiazka");
     book.setDescription("Ksiazka od publishera");
@@ -87,11 +109,10 @@ public class BookController {
 
   @PostMapping("/with-publisher2")
   @ResponseBody
-  public String createWithPublisher2(){
+  public String createWithPublisher2() {
     Book book = new Book();
     book.setTitle("Ksiazka");
     book.setDescription("Ksiazka od publishera");
-
 
     book.setPublisher(publisherDao.findById(1));
 
