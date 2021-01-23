@@ -2,8 +2,10 @@ package pl.coderslab.controller;
 
 
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +40,10 @@ public class BookFormController {
   }
 
   @PostMapping
-  public String addBook(@ModelAttribute Book book){
+  public String addBook(@ModelAttribute @Valid Book book, BindingResult result){
+    if(result.hasErrors()){
+      return "bookForm";
+    }
     bookDao.create(book);
     return "redirect:/books";
   }

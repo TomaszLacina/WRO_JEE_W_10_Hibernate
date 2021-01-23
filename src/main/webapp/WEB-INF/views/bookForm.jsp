@@ -9,13 +9,26 @@
   </head>
   <body>
     <form:form method="post" modelAttribute="book">
-      <form:input path="title"/>
-      <form:input path="rating"/>
-      <form:input path="description"/>
+      Title
+
+      <form:input path="title"/> <br/>
+      Rating
+
+      <form:input path="rating"/> <br/>
+      Descripion
+
+      <form:input path="description"/><br/>
+      Pages
+
+      <form:input path="pages"/> <br/>
+      Publisher
 
       <form:select path="publisher" items="${publishers}"
-            itemValue="id" itemLabel="name"/>
+            itemValue="id" itemLabel="name"/>  <br/>
       <input type="submit" value="Zapisz"/>
+
+
+      <form:errors path="*"/>
     </form:form>
   </body>
 </html>
