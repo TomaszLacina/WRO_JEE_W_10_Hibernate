@@ -41,7 +41,9 @@ public class BookController {
   @GetMapping
   @ResponseBody
   public String findAll() {
-    List<Book> all = bookRepository.findAll();
+//    List<Book> all = bookRepository.getAllByTitleHehe("Ksiazka");
+
+    List<Book> all = bookRepository.getAllByCategory(categoryRepository.findAll().get(0));
 
     return all.stream()
         .map(Book::toString)
