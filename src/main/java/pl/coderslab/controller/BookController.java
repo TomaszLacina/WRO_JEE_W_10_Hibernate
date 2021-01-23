@@ -17,6 +17,7 @@ import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Book;
 import pl.coderslab.entity.Publisher;
+import pl.coderslab.repository.BookRepository;
 
 @Controller
 @RequestMapping("/books")
@@ -24,16 +25,19 @@ public class BookController {
 
   private final BookDao bookDao;
   private final PublisherDao publisherDao;
+  private final BookRepository bookRepository;
 
-  public BookController(BookDao bookDao, PublisherDao publisherDao) {
+  public BookController(BookDao bookDao, PublisherDao publisherDao,
+      BookRepository bookRepository) {
     this.bookDao = bookDao;
     this.publisherDao = publisherDao;
+    this.bookRepository = bookRepository;
   }
 
   @GetMapping
   @ResponseBody
   public String findAll() {
-    List<Book> all = bookDao.findAll();
+    List<Book> all = bookRepository.findAll();
 
     return all.stream()
         .map(Book::toString)
