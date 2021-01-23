@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pl.coderslab.dao.BookDao;
 import pl.coderslab.dao.PublisherDao;
 import pl.coderslab.entity.Book;
+import pl.coderslab.entity.Category;
 import pl.coderslab.entity.Publisher;
 import pl.coderslab.repository.BookRepository;
+import pl.coderslab.repository.CategoryRepository;
 
 @Controller
 @RequestMapping("/books")
@@ -26,12 +28,14 @@ public class BookController {
   private final BookDao bookDao;
   private final PublisherDao publisherDao;
   private final BookRepository bookRepository;
+  private final CategoryRepository categoryRepository;
 
   public BookController(BookDao bookDao, PublisherDao publisherDao,
-      BookRepository bookRepository) {
+      BookRepository bookRepository, CategoryRepository categoryRepository) {
     this.bookDao = bookDao;
     this.publisherDao = publisherDao;
     this.bookRepository = bookRepository;
+    this.categoryRepository = categoryRepository;
   }
 
   @GetMapping
@@ -125,5 +129,50 @@ public class BookController {
 
   }
 
+
+
+  @GetMapping("/test-with-categories")
+  @ResponseBody
+  public String generateBooksWithCategories(){
+    Category category = new Category();
+    category.setName("Kryminal");
+
+    categoryRepository.save(category);
+
+    Book book = new Book();
+    book.setTitle("Ksiazka");
+    book.setDescription("Ksiazka od publishera");
+    book.setCategory(category);
+    book.setPublisher(publisherDao.findById(1));
+
+    bookDao.create(book);
+
+    Category category2 = new Category();
+    category2.setName("Inny");
+
+    categoryRepository.save(category2);
+
+    Book book2 = new Book();
+    book2.setTitle("Ksiazka");
+    book2.setDescription("Ksiazka od publishera");
+    book2.setCategory(category2);
+    book2.setPublisher(publisherDao.findById(1));
+    bookDao.create(book2);
+
+    return "okej";
+  }
+
+  @GetMapping("/testFinding")
+  @ResponseBody
+  public String testSearching(){
+    List<Book> ksiazka = bookRepository.findByTitle("Ksiazka");
+
+    List<Book> byCategoryId = bookRepository.findByCategoryId(1L);
+
+    Optional<Category> categoryById = categoryRepository.findById(2L);
+
+    List<Book> byCategory = bookRepository.findByCategory(categoryById.get());
+    return "okej";
+  }
 
 }

@@ -20,20 +20,23 @@ public class Book {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Size(min = 5)
+//  @Size(min = 5)
   private String title;
 
-  @Range(min = 1, max = 10)
+//  @Range(min = 1, max = 10)
   private int rating;
 
-  @Size(max = 600)
+//  @Size(max = 600)
   private String description;
 
-  @NotNull
+//  @NotNull
   @ManyToOne
   private Publisher publisher;
 
-  @Min(2)
+  @ManyToOne
+  private Category category;
+
+//  @Min(2)
   private int pages;
 
   public long getId() {
@@ -83,6 +86,15 @@ public class Book {
 
   public void setPages(int pages) {
     this.pages = pages;
+  }
+
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
   }
 
   @Override
